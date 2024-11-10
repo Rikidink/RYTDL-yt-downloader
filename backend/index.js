@@ -31,7 +31,7 @@ app.post('/download', async (req, res) => {
         // const videoPath = path.resolve(__dirname, 'video.mp4');
         // const outputPath = path.resolve(__dirname, 'video_with_silence.mp4');
 
-        const vidId = ytdl.getURLVideoID("https://youtu.be/f9cViIsTarw?si=Hf9hTvloe4-5blbP");
+        const vidId = ytdl.getURLVideoID(url);
         const info = await ytdl.getInfo(vidId);
     
         const videoFormat = ytdl.chooseFormat(info.formats, { quality: '398' });
@@ -39,23 +39,34 @@ app.post('/download', async (req, res) => {
     
         // Download both streams concurrently
         await Promise.all([
-          downloadStream("https://youtu.be/f9cViIsTarw?si=Hf9hTvloe4-5blbP", videoFormat, "video.mp4"),
-          downloadStream("https://youtu.be/f9cViIsTarw?si=Hf9hTvloe4-5blbP", audioFormat, "audio.mp3")
+          downloadStream(url, videoFormat, "video.mp4"),
+          downloadStream(url, audioFormat, "audio.mp3")
         ]);
     
         console.log("Both streams downloaded. Starting ffmpeg...");
     
+        // this downloads to browser but is a fragmented mp4...
         // Combine video and audio using ffmpeg
+        // ffmpeg()
+        //   .addInput("video.mp4")
+        //   .addInput("audio.mp3")
+        //   // some guy in the github issue gave the last option in the outputOptions idk what it is but makes it work
+        //   // https://github.com/fluent-ffmpeg/node-fluent-ffmpeg/issues/967
+        //   .outputOptions(['-c:v copy', '-c:a aac', '-movflags frag_keyframe+empty_moov']) 
+        //   .format('mp4')
+        //   .pipe(res, { end: true })
+        //   .on('end', () => console.log("Video and audio merged successfully!"))
+        //   .on('error', (err) => console.error("Error merging video and audio:", err));
+
         ffmpeg()
-          .addInput("video.mp4")
-          .addInput("audio.mp3")
-          // some guy in the github issue gave the last option in the outputOptions idk what it is but makes it work
-          // https://github.com/fluent-ffmpeg/node-fluent-ffmpeg/issues/967
-          .outputOptions(['-c:v copy', '-c:a aac', '-movflags frag_keyframe+empty_moov']) 
-          .format('mp4')
-          .pipe(res, { end: true })
-          .on('end', () => console.log("Video and audio merged successfully!"))
-          .on('error', (err) => console.error("Error merging video and audio:", err));
+        .addInput("video.mp4")
+        .addInput("audio.mp3")
+        // some guy in the github issue gave the last option in the outputOptions idk what it is but makes it work
+        // https://github.com/fluent-ffmpeg/node-fluent-ffmpeg/issues/967
+        .outputOptions(['-c:v copy', '-c:a aac']) 
+        .saveToFile("C:/Users/ricky/Downloads/final.mp4")
+        .on('end', () => console.log("Video and audio merged successfully!"))
+        .on('error', (err) => console.error("Error merging video and audio:", err));
 
         //   return res.status(200).json({ message: "Sucessfully downloaded!" });
 
