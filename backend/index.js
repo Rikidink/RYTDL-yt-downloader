@@ -25,51 +25,41 @@ app.post('/download', async (req, res) => {
     }
 
     try {
-        // res.setHeader("Content-Disposition", 'attachment; filename="video.mp4"');
-        // res.setHeader("Content-Type", "video/mp4");
+        res.setHeader("Content-Disposition", 'attachment; filename="final.mp4"');
+        res.setHeader("Content-Type", "video/mp4");
 
         // const videoPath = path.resolve(__dirname, 'video.mp4');
         // const outputPath = path.resolve(__dirname, 'video_with_silence.mp4');
 
-
-        const videoWriteStream = fs.createWriteStream("video.mp4");
-        const audioWriteStream = fs.createWriteStream("audio.mp4");
-        // const finalStream = fs.createWriteStream("final.mp4");
-
         const vidId = ytdl.getURLVideoID("https://youtu.be/f9cViIsTarw?si=Hf9hTvloe4-5blbP");
         const info = await ytdl.getInfo(vidId);
-        const formats = info.formats
-
-
-        // NOTE: USE ITAG 137, ITS H264 CODEC (AVC1)
+    
         const videoFormat = ytdl.chooseFormat(info.formats, { quality: '398' });
-        // console.log('Format found!', format);
-
-        const videoStream = ytdl("https://youtu.be/f9cViIsTarw?si=Hf9hTvloe4-5blbP", { format: videoFormat});
-
         const audioFormat = ytdl.chooseFormat(info.formats, { quality: '140' });
-        // console.log('Format found!', format);
-
-        const audioStream = ytdl("https://youtu.be/f9cViIsTarw?si=Hf9hTvloe4-5blbP", { format: audioFormat});
-
-        // stream.pipe(res);
-
-        videoStream.pipe(videoWriteStream);
-        audioStream.pipe(audioWriteStream);
-        
-        
+    
+        // Download both streams concurrently
+        await Promise.all([
+          downloadStream("https://youtu.be/f9cViIsTarw?si=Hf9hTvloe4-5blbP", videoFormat, "video.mp4"),
+          downloadStream("https://youtu.be/f9cViIsTarw?si=Hf9hTvloe4-5blbP", audioFormat, "audio.mp3")
+        ]);
+    
+        console.log("Both streams downloaded. Starting ffmpeg...");
+    
+        // Combine video and audio using ffmpeg
         ffmpeg()
-        .addInput("video.mp4")
-        .addInput("audio.mp4")
-        .outputOptions(['-c:v copy', '-c:a copy'])
-        .saveToFile("final.mp4", { end: true});
+          .addInput("video.mp4")
+          .addInput("audio.mp3")
+          // some guy in the github issue gave the last option in the outputOptions idk what it is but makes it work
+          // https://github.com/fluent-ffmpeg/node-fluent-ffmpeg/issues/967
+          .outputOptions(['-c:v copy', '-c:a aac', '-movflags frag_keyframe+empty_moov']) 
+          .format('mp4')
+          .pipe(res, { end: true })
+          .on('end', () => console.log("Video and audio merged successfully!"))
+          .on('error', (err) => console.error("Error merging video and audio:", err));
 
+        //   return res.status(200).json({ message: "Sucessfully downloaded!" });
 
-
-        // for (let i = 0; i <= formats.length; i++) {
-        //     console.log(formats[i].itag, formats[i].qualityLabel, formats[i].hasVideo, formats[i].hasAudio, formats[i].container, formats[i].codecs)
-        // }
-        // console.log(formats[0]);
+          
 
     }
     catch (err) {
@@ -78,4 +68,12 @@ app.post('/download', async (req, res) => {
 
 
 });
+
+function downloadStream(url, format, output) {
+    return new Promise((resolve, reject) => {
+      const stream = ytdl(url, { format }).pipe(fs.createWriteStream(output));
+      stream.on('finish', resolve);
+      stream.on('error', reject);
+    });
+  }
 
