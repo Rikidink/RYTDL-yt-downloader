@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const ytdl = require("@distube/ytdl-core");
 
-const { mergeVideoAudio, downloadYtVideo } = require('./util.js');
+const { mergeVideoAudio, downloadYtVideo, cleanUp } = require('./util.js');
 
 
 const app = express();
@@ -40,7 +40,10 @@ app.post('/download', async (req, res) => {
     
         console.log("Both streams downloaded. Starting ffmpeg...");
     
-        mergeVideoAudio("video.mp4", "audio.mp3", "C:/Users/ricky/Downloads/final.mp4")
+        await mergeVideoAudio("video.mp4", "audio.mp3", "C:/Users/ricky/Downloads/final.mp4")
+
+        console.log("Cleaning up files...");
+        cleanUp();
 
         //   return res.status(200).json({ message: "Sucessfully downloaded!" });
 

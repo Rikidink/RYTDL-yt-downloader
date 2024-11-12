@@ -24,14 +24,23 @@ ffmpeg.setFfprobePath("ffmpeg/ffprobe.exe");
 
 
 const mergeVideoAudio = (videoPath, audioPath, outputPath) => {
-    ffmpeg()
-    .addInput(videoPath)
-    .addInput(audioPath)
-    .outputOptions(['-c:v copy', '-c:a aac']) 
-    .saveToFile(outputPath)
-    .on('end', () => console.log("Video and audio merged successfully!"))
-    .on('error', (err) => console.error("Error merging video and audio:", err));
-}
+    return new Promise((resolve, reject) => {
+        ffmpeg()
+            .addInput(videoPath)
+            .addInput(audioPath)
+            .outputOptions(['-c:v copy', '-c:a aac']) 
+            .saveToFile(outputPath)
+            .on('end', () => {
+                console.log("Video and audio merged successfully!");
+                resolve();  // Resolve the promise when merging completes
+            })
+            .on('error', (err) => {
+                console.error("Error merging video and audio:", err);
+                reject(err);  // Reject the promise if an error occurs
+            });
+    });
+};
+
 
 
 // function downloadStream(url, format, output) {
@@ -50,8 +59,28 @@ const downloadYtVideo = (url, format, output) => {
     });
 }
 
+// removes the seperate audio and video files in the folder
+const cleanUp = () => {
+    fs.unlink("video.mp4", (err) => {
+        if (err) {
+            console.error(`Error removing video file: ${err}`);
+            return;
+        }
+        console.log("Video file cleaned up");
+    });
+
+    fs.unlink("audio.mp3", (err) => {
+        if (err) {
+            console.error(`Error removing video file: ${err}`);
+            return;
+        }
+        console.log("Audio file cleaned up");
+    });
+
+    return
+}
 
 
-module.exports = { mergeVideoAudio, downloadYtVideo }
+module.exports = { mergeVideoAudio, downloadYtVideo, cleanUp }
 
 
