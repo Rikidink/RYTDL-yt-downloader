@@ -1,9 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const ytdl = require("@distube/ytdl-core");
-const fs = require('fs');
-const path = require('path');
-const ffmpeg = require('fluent-ffmpeg');
 
 const { mergeVideoAudio, downloadYtVideo } = require('./util.js');
 
@@ -27,15 +24,11 @@ app.post('/download', async (req, res) => {
     }
 
     try {
-        // res.setHeader("Content-Disposition", 'attachment; filename="final.mp4"');
-        // res.setHeader("Content-Type", "video/mp4");
-
-        // const videoPath = path.resolve(__dirname, 'video.mp4');
-        // const outputPath = path.resolve(__dirname, 'video_with_silence.mp4');
 
         const vidId = ytdl.getURLVideoID(url);
         const info = await ytdl.getInfo(vidId);
-    
+ 
+        // we want av01 video codec btw, they all start with 39*
         const videoFormat = ytdl.chooseFormat(info.formats, { quality: '398' });
         const audioFormat = ytdl.chooseFormat(info.formats, { quality: '140' });
     
@@ -50,8 +43,6 @@ app.post('/download', async (req, res) => {
         mergeVideoAudio("video.mp4", "audio.mp3", "C:/Users/ricky/Downloads/final.mp4")
 
         //   return res.status(200).json({ message: "Sucessfully downloaded!" });
-
-          
 
     }
     catch (err) {
