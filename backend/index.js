@@ -25,8 +25,10 @@ app.post('/download', async (req, res) => {
 
     try {
 
-        const vidId = ytdl.getURLVideoID(url);
-        const info = await ytdl.getInfo(vidId);
+        // const vidId = ytdl.getURLVideoID(url);
+        const info = await ytdl.getInfo(url);
+        const videoTitle = info.videoDetails.title.replace(/[<>:"/\\|?*]/g, ' ');
+        console.log(videoTitle);
  
         // we want av01 video codec btw, they all start with 39*
         const videoFormat = ytdl.chooseFormat(info.formats, { quality: '398' });
@@ -40,7 +42,10 @@ app.post('/download', async (req, res) => {
     
         console.log("Both streams downloaded. Starting ffmpeg...");
     
-        await mergeVideoAudio("video.mp4", "audio.mp3", "C:/Users/ricky/Downloads/final.mp4")
+        const outputFileName = "C:/Users/ricky/Downloads/" + videoTitle + ".mp4";
+
+        console.log("Outputting to: ", outputFileName);
+        await mergeVideoAudio("video.mp4", "audio.mp3", outputFileName);
 
         console.log("Cleaning up files...");
         cleanUp();
