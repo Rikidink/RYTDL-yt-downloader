@@ -48,6 +48,7 @@ app.get('/resolutions', async (req, res) => {
 
 app.post('/download', async (req, res) => {
     const url = req.body.url;
+    const iTag = req.body.itag;
 
     if (!url) {
         return res.status(400).json({error: "Invalid URL"});
@@ -61,7 +62,7 @@ app.post('/download', async (req, res) => {
         console.log(videoTitle);
  
         // we want av01 video codec btw, they all start with 39*
-        const videoFormat = ytdl.chooseFormat(info.formats, { quality: '398' });
+        const videoFormat = ytdl.chooseFormat(info.formats, { quality: iTag });
         const audioFormat = ytdl.chooseFormat(info.formats, { quality: '140' });
     
         // Download both streams concurrently
