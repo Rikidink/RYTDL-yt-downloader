@@ -25,8 +25,19 @@ app.get('/resolutions', async (req, res) => {
 
     try {
         const info = await ytdl.getInfo(url);
-        console.log(info);
-        return res.status(200).json({message: "Resolutions successfully received"});
+        // console.log(info);
+
+        const resolutions = new Map(
+            info.formats
+            .filter(format => format.hasVideo)
+            .map(format => [format.qualityLabel, format.qualityLabel])
+        );
+
+        console.log(resolutions);
+
+        const mapToObject = Object.fromEntries(resolutions);
+
+        return res.json(mapToObject);
 
     }
     catch (err) {
@@ -69,10 +80,11 @@ app.post('/download', async (req, res) => {
         console.log("Cleaning up files...");
         cleanUp();
 
-        //   return res.status(200).json({ message: "Sucessfully downloaded!" });
+        return res.status(200).json({ message: "Sucessfully downloaded!" });
 
     }
     catch (err) {
+        cleanUp();
         return res.status(500).json({error: `Error processing request ${err}`});
     }
 
