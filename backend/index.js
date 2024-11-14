@@ -16,6 +16,25 @@ app.listen(PORT, () => {
     console.log("Server listening on PORT:", PORT);
 });
 
+app.get('/resolutions', async (req, res) => {
+    const url = req.body.url;
+
+    if (!url) {
+        return res.status(400).json({error: "Invalid URL"});
+    }
+
+    try {
+        const info = await ytdl.getInfo(url);
+        console.log(info);
+        return res.status(200).json({message: "Resolutions successfully received"});
+
+    }
+    catch (err) {
+        return res.status(500).json({error: `Error getting resolutions: ${err}`});
+    }
+
+})
+
 app.post('/download', async (req, res) => {
     const url = req.body.url;
 
