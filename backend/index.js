@@ -16,6 +16,10 @@ app.listen(PORT, () => {
     console.log("Server listening on PORT:", PORT);
 });
 
+app.get('/test', async (req, res) => {
+    return res.status(200).json({message: "whoop de doo!"});
+});
+
 app.get('/resolutions', async (req, res) => {
     const url = req.query.url;
 
