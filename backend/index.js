@@ -16,9 +16,6 @@ app.listen(PORT, () => {
     console.log("Server listening on PORT:", PORT);
 });
 
-app.get('/test', async (req, res) => {
-    return res.status(200).json({message: "whoop de doo!"});
-});
 
 app.get('/resolutions', async (req, res) => {
     const url = req.query.url;
@@ -34,7 +31,8 @@ app.get('/resolutions', async (req, res) => {
         const resolutions = new Map(
             info.formats
             .filter(format => format.hasVideo)
-            .map(format => [format.qualityLabel, format.qualityLabel])
+            // .map(format => [format.qualityLabel, format.qualityLabel])
+            .map(format => [format.qualityLabel, format.itag])
         );
 
         console.log(resolutions);
