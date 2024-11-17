@@ -4,30 +4,85 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [url, setUrl] = useState('');
+  const [resolutions, setResolutions] = useState({});
+  const [itag, setItag] = useState(null);
+
+  const handleChange = (event) => {
+    console.log("why");
+    setUrl(event.target.value);
+  };
+
+  const fetchResolutions = async () => {
+    try {
+      const res = await axios.get('/resolutions', {
+        params: { url: url }
+      });
+
+      setResolutions(res.data);
+
+    }
+    catch (err) {
+      console.error('Error fetching resolutions:', err.message);
+    }
+  };
+
+  const handleItag = async (itag) => {
+    // setItag(itag);
+    try {
+      if (!itag) {
+        alert('Please select a resolution');
+        return
+      }
+
+      await axios.post('/download', {
+        url: url,
+        itag: itag
+      });
+    }
+    catch (err) {
+      console.error("Error downloading video: ", err.message);
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      if (!itag) {
+        alert('Please select a resolution');
+        return
+      }
+
+      await axios.post('/download', {
+        url: url,
+        itag: itag
+      });
+    }
+    catch (err) {
+      console.error("Error downloading video: ", err.message);
+    }
+  };
 
 
-  useEffect(() => {
-    axios.get('/test')
-    .then(res => {
-      setData(res.data);
-      setLoading(false);
-    })
-    .catch(err => {
-      setError(err.message);
-      setLoading(false);
-    })
-  }, []);
-
-  if (loading) return <h1>Loading...</h1>;
-  if (error) return <h1>Error: {error}</h1>;
 
   return (
     <div>
-      <h1>Hello!</h1>
-      <h2>{data.message}</h2>
+      <h1>YouTube Video Downloader! Enjoy the plain HTML :)</h1>
+
+      <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder='Enter video URL' />
+      <button onClick={fetchResolutions}>Get Resolutions</button>
+
+      <h2>Available Resolutions:</h2>
+      <ul>
+      {Object.entries(resolutions).map(([resolution, itag]) => (
+          <li key={itag}>
+            <button onClick={() => handleItag(itag)}>
+              {resolution} (itag: {itag})
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      {/* <button onClick={handleDownload}>Download Video</button> */}
     </div>
   );
 }
