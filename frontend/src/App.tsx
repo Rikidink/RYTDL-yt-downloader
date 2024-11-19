@@ -1,23 +1,28 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
+
+interface Resolutions {
+  [resolution: string]: string;
+}
+
 function App() {
-  const [url, setUrl] = useState('');
-  const [resolutions, setResolutions] = useState({});
-  const [quality, setQuality] = useState(null);
+  const [url, setUrl] = useState<string>('');
+  const [resolutions, setResolutions] = useState<Resolutions>({});
+  const [quality, setQuality] = useState<[string, string] | null>(null);
 
 
   const fetchResolutions = async () => {
     try {
-      const res = await axios.get('/resolutions', {
+      const res = await axios.get<Resolutions>('/api/resolutions', {
         params: { url: url }
       });
 
       setResolutions(res.data);
 
     }
-    catch (err) {
+    catch (err: any) {
       console.error('Error fetching resolutions:', err.message);
     }
   };
@@ -30,12 +35,12 @@ function App() {
         return
       }
 
-      await axios.post('/download', {
+      await axios.post('/api/download', {
         url: url,
         itag: quality[1]
       });
     }
-    catch (err) {
+    catch (err: any) {
       console.error("Error downloading video: ", err.message);
     }
   };
