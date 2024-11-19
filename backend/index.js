@@ -17,7 +17,7 @@ app.listen(PORT, () => {
 });
 
 
-app.get('/resolutions', async (req, res) => {
+app.get('/api/resolutions', async (req, res) => {
     const url = req.query.url;
 
     if (!url) {
@@ -48,7 +48,7 @@ app.get('/resolutions', async (req, res) => {
 
 })
 
-app.post('/download', async (req, res) => {
+app.post('/api/download', async (req, res) => {
     const url = req.body.url;
     const iTag = req.body.itag;
 
