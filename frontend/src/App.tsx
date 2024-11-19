@@ -11,14 +11,15 @@ function App() {
   const [url, setUrl] = useState<string>('');
   const [resolutions, setResolutions] = useState<Resolutions>({});
   const [quality, setQuality] = useState<[string, string] | null>(null);
-
+  const [downloadPath, setDownloadPath] = useState<string>('');
+  
 
   const fetchResolutions = async () => {
     try {
       const res = await axios.get<Resolutions>('/api/resolutions', {
         params: { url: url }
       });
-
+      console.log(res.data);
       setResolutions(res.data);
 
     }
@@ -45,6 +46,19 @@ function App() {
     }
   };
 
+  const selectDownloadFolder = async () => {
+    try {
+      // Open a folder picker dialog
+      const directoryHandle = await window.showDirectoryPicker(); // it does exist
+      const folderName = directoryHandle.name;
+
+      // Get full path for backend (Electron apps only)
+      const path = folderName; // This assumes Electron integration
+      setDownloadPath(path);
+    } catch (err) {
+      console.error('Error selecting folder:', err);
+    }
+  };
 
 
   return (
@@ -68,6 +82,9 @@ function App() {
           </li>
         ))}
       </ul>
+
+      <button onClick={selectDownloadFolder}>Select Download Folder (broken)</button>
+      {downloadPath && <p>Selected folder: {downloadPath}</p>}
 
       {quality && (
         <button onClick={handleDownload}>
