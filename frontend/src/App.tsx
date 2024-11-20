@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -21,6 +21,11 @@ function App() {
   const { mode, setMode } = useColorScheme();
   // const [downloadPath, setDownloadPath] = useState<string>('');
   
+  useEffect(() => {
+    // Reset resolutions and quality when URL changes
+    setResolutions({});
+    setQuality(null);
+  }, [url]);
 
   const fetchResolutions = async () => {
     try {
@@ -113,7 +118,7 @@ function App() {
         Get Resolutions
       </Button>
 
-      <h2>Available Resolutions:</h2>
+      {Object.keys(resolutions).length > 0 && (<h2>Available Resolutions:</h2>)}
       
       <ButtonGroup
         size="lg"
@@ -152,6 +157,7 @@ function App() {
 //   );
 // }
 
+// this is for enabling dark/light mode toggling
 function AppWrapper() {
   return (
     <CssVarsProvider>
