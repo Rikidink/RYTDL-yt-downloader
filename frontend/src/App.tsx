@@ -27,6 +27,8 @@ function App() {
     setQuality(null);
   }, [url]);
 
+
+  // sends GET request to api to get available resolutions for a video
   const fetchResolutions = async () => {
     try {
       setLoadResolutions(true);
@@ -51,7 +53,7 @@ function App() {
     }
   };
 
-
+  // sends POST request to api to download video
   const handleDownload = async () => {
     try {
       if (!quality) {
@@ -142,20 +144,6 @@ function App() {
 
   );
 }
-
-// function ToggleThemeButton() {
-//   const { mode, setMode } = useColorScheme();
-
-//   return (
-//     <Button
-//       onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
-//       variant="outlined"
-//       sx={{ marginBottom: 2 }}
-//     >
-//       Toggle {mode === 'light' ? 'Dark' : 'Light'} Mode
-//     </Button>
-//   );
-// }
 
 // this is for enabling dark/light mode toggling
 function AppWrapper() {

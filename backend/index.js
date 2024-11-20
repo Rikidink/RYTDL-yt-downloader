@@ -17,6 +17,9 @@ app.listen(PORT, () => {
 });
 
 
+// GET request to get available resolutions for a video
+// returns an object with qualities (1080p, 720p, etc) as keys
+// and itags as values
 app.get('/api/resolutions', async (req, res) => {
     const url = req.query.url;
 
@@ -48,6 +51,7 @@ app.get('/api/resolutions', async (req, res) => {
 
 })
 
+// POST request to download a video to a specified location on system
 app.post('/api/download', async (req, res) => {
     const url = req.body.url;
     const iTag = req.body.itag;
