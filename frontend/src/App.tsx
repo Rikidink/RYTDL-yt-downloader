@@ -93,7 +93,7 @@ function App() {
     <div>
       <Button
         onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
-        variant="outlined"
+        variant="soft"
         sx={{ marginBottom: 2 }}
       >
         Toggle {mode === 'light' ? 'Dark' : 'Light'} Mode
