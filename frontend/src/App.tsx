@@ -15,11 +15,14 @@ function App() {
   const [url, setUrl] = useState<string>('');
   const [resolutions, setResolutions] = useState<Resolutions>({});
   const [quality, setQuality] = useState<[string, string] | null>(null);
+  const [downloading, setDownloading] = useState<boolean>(false);
+  const [loadResolutions, setLoadResolutions] = useState<boolean>(false);
   // const [downloadPath, setDownloadPath] = useState<string>('');
   
 
   const fetchResolutions = async () => {
     try {
+      setLoadResolutions(true);
       const res = await axios.get<Resolutions>('/api/resolutions', {
         params: { url: url }
       });
@@ -36,6 +39,9 @@ function App() {
       }
 
     }
+    finally {
+      setLoadResolutions(false);
+    }
   };
 
 
@@ -45,6 +51,8 @@ function App() {
         alert('Please select a resolution');
         return
       }
+
+      setDownloading(true);
 
       await axios.post('/api/download', {
         url: url,
@@ -57,7 +65,11 @@ function App() {
       }
       else {
         console.error('Unexpected error:', err);
-      }    }
+      }
+    }
+    finally {
+      setDownloading(false);
+    }
   };
 
   // const selectDownloadFolder = async () => {
@@ -78,14 +90,16 @@ function App() {
   return (
     <div>
       <h1>YouTube Video Downloader</h1>
+      
       <Input
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="Enter video URL"
+        disabled={downloading}
         sx={{ marginBottom: 2, width: '100%' }} // Space below input
       />
-      <Button onClick={fetchResolutions} size='lg' sx={{ marginBottom: 2 }}>
+      <Button onClick={fetchResolutions} size='lg' loading={loadResolutions} disabled={downloading} sx={{ marginBottom: 2 }}>
         Get Resolutions
       </Button>
 
@@ -105,8 +119,8 @@ function App() {
       </ButtonGroup>
 
       {quality && (
-        <Button onClick={handleDownload} size='lg' color='success' sx={{ marginTop: 2 }}>
-          Download Video in {quality[0]}
+        <Button onClick={handleDownload} size='lg' variant='solid' color='success' loading={downloading} loadingPosition='end' sx={{ marginTop: 2 }}>
+          {downloading ? "Downloading..." : `Download Video in ${quality[0]}`}
         </Button>
       )}
     </div>
