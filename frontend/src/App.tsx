@@ -2,6 +2,9 @@ import { useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
+import Input from '@mui/joy/Input';
+import Button from '@mui/joy/Button';
+import ButtonGroup from '@mui/joy/ButtonGroup';
 
 
 interface Resolutions {
@@ -75,34 +78,39 @@ function App() {
   return (
     <div>
       <h1>YouTube Video Downloader</h1>
-      <input
+      <Input
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="Enter video URL"
+        sx={{ marginBottom: 2, width: '100%' }} // Space below input
       />
-      <button onClick={fetchResolutions}>Get Resolutions</button>
+      <Button onClick={fetchResolutions} size='lg' sx={{ marginBottom: 2 }}>
+        Get Resolutions
+      </Button>
 
       <h2>Available Resolutions:</h2>
-      <ul>
+      
+      <ButtonGroup
+        size="lg"
+        variant="solid"
+        spacing={2} // Space between buttons
+        sx={{ marginBottom: 2 }} // Space below ButtonGroup
+      >
         {Object.entries(resolutions).map(([resolution, itagValue]) => (
-          <li key={itagValue}>
-            <button onClick={() => setQuality([resolution, itagValue])}>
-              {resolution} (itag: {itagValue})
-            </button>
-          </li>
+          <Button onClick={() => setQuality([resolution, itagValue])}>
+            {resolution} (itag: {itagValue})
+          </Button>
         ))}
-      </ul>
-
-      {/* <button onClick={selectDownloadFolder}>Select Download Folder (broken)</button>
-      {downloadPath && <p>Selected folder: {downloadPath}</p>} */}
+      </ButtonGroup>
 
       {quality && (
-        <button onClick={handleDownload}>
+        <Button onClick={handleDownload} size='lg' color='success' sx={{ marginTop: 2 }}>
           Download Video in {quality[0]}
-        </button>
+        </Button>
       )}
     </div>
+
   );
 }
 
