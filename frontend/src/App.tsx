@@ -3,6 +3,7 @@ import axios from 'axios';
 import './App.css';
 
 
+
 interface Resolutions {
   [resolution: string]: string;
 }
@@ -11,7 +12,7 @@ function App() {
   const [url, setUrl] = useState<string>('');
   const [resolutions, setResolutions] = useState<Resolutions>({});
   const [quality, setQuality] = useState<[string, string] | null>(null);
-  const [downloadPath, setDownloadPath] = useState<string>('');
+  // const [downloadPath, setDownloadPath] = useState<string>('');
   
 
   const fetchResolutions = async () => {
@@ -23,8 +24,14 @@ function App() {
       setResolutions(res.data);
 
     }
-    catch (err: any) {
-      console.error('Error fetching resolutions:', err.message);
+    catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        console.error('Error fetching resolutions:', err.message);
+      }
+      else {
+        console.error('Unexpected error:', err);
+      }
+
     }
   };
 
@@ -41,24 +48,28 @@ function App() {
         itag: quality[1]
       });
     }
-    catch (err: any) {
-      console.error("Error downloading video: ", err.message);
-    }
+    catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        console.error('Error downloading:', err.message);
+      }
+      else {
+        console.error('Unexpected error:', err);
+      }    }
   };
 
-  const selectDownloadFolder = async () => {
-    try {
-      // Open a folder picker dialog
-      const directoryHandle = await window.showDirectoryPicker(); // it does exist
-      const folderName = directoryHandle.name;
+  // const selectDownloadFolder = async () => {
+  //   try {
+  //     // Open a folder picker dialog
+  //     const directoryHandle = await window.showDirectoryPicker(); // it does exist
+  //     const folderName = directoryHandle.name;
 
-      // Get full path for backend (Electron apps only)
-      const path = folderName; // This assumes Electron integration
-      setDownloadPath(path);
-    } catch (err) {
-      console.error('Error selecting folder:', err);
-    }
-  };
+  //     // Get full path for backend (Electron apps only)
+  //     const path = folderName; // This assumes Electron integration
+  //     setDownloadPath(path);
+  //   } catch (err) {
+  //     console.error('Error selecting folder:', err);
+  //   }
+  // };
 
 
   return (
@@ -83,8 +94,8 @@ function App() {
         ))}
       </ul>
 
-      <button onClick={selectDownloadFolder}>Select Download Folder (broken)</button>
-      {downloadPath && <p>Selected folder: {downloadPath}</p>}
+      {/* <button onClick={selectDownloadFolder}>Select Download Folder (broken)</button>
+      {downloadPath && <p>Selected folder: {downloadPath}</p>} */}
 
       {quality && (
         <button onClick={handleDownload}>
