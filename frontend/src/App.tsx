@@ -5,6 +5,7 @@ import './App.css';
 import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 import ButtonGroup from '@mui/joy/ButtonGroup';
+import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 
 
 interface Resolutions {
@@ -17,6 +18,7 @@ function App() {
   const [quality, setQuality] = useState<[string, string] | null>(null);
   const [downloading, setDownloading] = useState<boolean>(false);
   const [loadResolutions, setLoadResolutions] = useState<boolean>(false);
+  const { mode, setMode } = useColorScheme();
   // const [downloadPath, setDownloadPath] = useState<string>('');
   
 
@@ -89,6 +91,14 @@ function App() {
 
   return (
     <div>
+      <Button
+        onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
+        variant="outlined"
+        sx={{ marginBottom: 2 }}
+      >
+        Toggle {mode === 'light' ? 'Dark' : 'Light'} Mode
+      </Button>
+
       <h1>YouTube Video Downloader</h1>
       
       <Input
@@ -128,4 +138,26 @@ function App() {
   );
 }
 
-export default App;
+// function ToggleThemeButton() {
+//   const { mode, setMode } = useColorScheme();
+
+//   return (
+//     <Button
+//       onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
+//       variant="outlined"
+//       sx={{ marginBottom: 2 }}
+//     >
+//       Toggle {mode === 'light' ? 'Dark' : 'Light'} Mode
+//     </Button>
+//   );
+// }
+
+function AppWrapper() {
+  return (
+    <CssVarsProvider>
+      <App />
+    </CssVarsProvider>
+  );
+}
+
+export default AppWrapper;
