@@ -81,14 +81,15 @@ app.post('/api/download', async (req, res) => {
         await mergeVideoAudio("video.mp4", "audio.mp3", outputFileName);
 
         console.log("Cleaning up files...");
-        cleanUp();
 
         return res.status(200).json({ message: "Sucessfully downloaded!" });
 
     }
     catch (err) {
-        cleanUp();
         return res.status(500).json({error: `Error processing request ${err}`});
+    }
+    finally {
+        cleanUp();
     }
 
 
