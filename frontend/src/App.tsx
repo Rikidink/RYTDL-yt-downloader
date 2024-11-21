@@ -33,6 +33,7 @@ function App() {
     try {
       setLoadResolutions(true);
       const res = await axios.get<Resolutions>('/api/resolutions', {
+      // const res = await axios.get<Resolutions>('http://localhost:8080/api/resolutions', {  // this is so electron does the requests properly
         params: { url: url }
       });
       console.log(res.data);
@@ -64,6 +65,7 @@ function App() {
       setDownloading(true);
 
       await axios.post('/api/download', {
+      // await axios.post('http://localhost:8080/api/download', {  // this is so electron does the requests properly
         url: url,
         itag: quality[1]
       });
