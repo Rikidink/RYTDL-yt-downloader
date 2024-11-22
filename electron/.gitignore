@@ -1,0 +1,6 @@
+node_modules
+.env
+*.mp4
+*.mp3
+ffmpeg
+RYTDL-win32-x64*
