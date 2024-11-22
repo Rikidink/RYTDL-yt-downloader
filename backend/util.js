@@ -1,10 +1,11 @@
 const ffmpeg = require('fluent-ffmpeg');
 const ytdl = require("@distube/ytdl-core");
+const path = require('path');
 const fs = require('fs');
 
 // set paths for ffmpeg/ffprobe
-ffmpeg.setFfmpegPath("ffmpeg/ffmpeg.exe");
-ffmpeg.setFfprobePath("ffmpeg/ffprobe.exe");
+ffmpeg.setFfmpegPath(path.join(__dirname, "ffmpeg/ffmpeg.exe"));
+ffmpeg.setFfprobePath(path.join(__dirname, "ffmpeg/ffprobe.exe"));
 
 
 // this downloads to browser but is a fragmented mp4...
