@@ -26,7 +26,7 @@ It's pretty straightforward, just input the url and press the get resolutions bu
 
 From there, you can see the available resolutions for the video (the app supports all resolutions up to and including 4k/2160p!).
 
-Press download and the video gets downloaded depending on if using the web app or desktop app:
+Press download and the video download location depends on if you're using the web app or desktop app:
 
 #### Desktop app:
 Downloaded into the `resources/app/` folder (look for the `.mp4` file with the video title).
