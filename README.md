@@ -16,7 +16,7 @@ Functionally, the app utilises two main dependencies:
 - [ffmpeg](https://www.ffmpeg.org/) (video + audio processing software) which is interfaced using the fluent-ffmpeg node module
 
 YouTube "videos" are actually formed by their respective video and audio counterparts so these parts are individually downloaded by ytdl-core and are combined using ffmpeg.
-As a result **ffmpeg.exe** needs to be dowwnloaded externally from the ffmpeg website and added in a folder named "ffmpeg" in the backend directory (and electron directory if building the desktop app from source).
+As a result **ffmpeg.exe** needs to be downloaded externally from the ffmpeg website and added in a folder named "ffmpeg" in the backend directory (and electron directory if building the desktop app from source).
 
 For sake of categorisation, the electron directory is basically a copy and paste of the backend along with a static build of the frontend and the main.js electron entry point file.   
 I just thought it'd be nice to have every seperate component of the app in different folders :)
