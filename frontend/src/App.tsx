@@ -128,11 +128,15 @@ function App() {
         size="lg"
         variant="solid"
         spacing={2} // Space between buttons
-        sx={{ marginBottom: 2 }} // Space below ButtonGroup
+        sx={{
+          marginBottom: 2,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
       >
         {Object.entries(resolutions).map(([resolution, itagValue]) => (
           <Button onClick={() => setQuality([resolution, itagValue])}>
-            {resolution} (itag: {itagValue})
+            {resolution}
           </Button>
         ))}
       </ButtonGroup>
