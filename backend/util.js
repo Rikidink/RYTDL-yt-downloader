@@ -28,7 +28,7 @@ const mergeVideoAudio = (videoPath, audioPath, outputPath) => {
         ffmpeg()
             .addInput(videoPath)
             .addInput(audioPath)
-            .outputOptions(['-c:v copy', '-c:a aac']) 
+            .outputOptions(['-c:v copy', '-c:a copy']) 
             .saveToFile(outputPath)
             .on('end', () => {
                 console.log("Video and audio merged successfully!");
