@@ -4,3 +4,4 @@ node_modules
 *.mp3
 ffmpeg
 RYTDL-win32-x64*
+build

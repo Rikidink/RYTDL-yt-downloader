@@ -3,18 +3,8 @@
   "version": "1.0.0",
   "description": "YT Vid downloader app",
   "main": "main.js",
-  "bin": {
-    "starter": "./main.js"
-  },
-  "files": [
-    "dist/**/*",
-    "index.js",
-    "util.js",
-    "main.js",
-    "package.json"
-  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "electron-builder"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +16,35 @@
   },
   "devDependencies": {
     "electron": "^33.2.0",
-    "electron-packager": "^17.1.2"
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.example.rytdl",
+    "productName": "RYTDL",
+    "extraResources": [
+      {
+        "from": "ffmpeg",
+        "to": "ffmpeg",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "win": {},
+    "linux": {},
+    "directories": {
+      "output": "build",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "index.js",
+      "util.js",
+      "main.js",
+      "package.json"
+    ]
   }
 }
