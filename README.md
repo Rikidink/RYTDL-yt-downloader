@@ -1,4 +1,7 @@
-# YouTube Video Downloader Electron Desktop App
+![image](https://github.com/user-attachments/assets/53f92b57-b068-447d-8c06-a5e97ff6bd2d)
+
+
+# RYTDL - A YouTube Video Downloader Electron Desktop App
 
 ![image](https://github.com/user-attachments/assets/27f7549d-3c22-4397-bd54-bbe4c4a7f3ff)
 
