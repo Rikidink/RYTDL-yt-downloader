@@ -29,6 +29,10 @@ function startBackend() {
   backendProcess = fork(path.join(app.getAppPath(), 'index.js'));
 
   backendProcess.on('message', (message) => {
+    if (message === 'ready') {
+      console.log('Backend is ready');
+      createWindow();
+    }
     console.log('Backend message:', message);
   });
 
@@ -79,7 +83,7 @@ function createWindow() {
 
 app.on('ready', () => {
   startBackend();
-  createWindow();
+  // createWindow();
 });
 
 app.on('window-all-closed', () => {
