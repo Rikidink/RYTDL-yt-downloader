@@ -5,6 +5,8 @@ import './App.css';
 import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 import ButtonGroup from '@mui/joy/ButtonGroup';
+import Alert from '@mui/joy/Alert';
+
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 
 
@@ -18,6 +20,7 @@ function App() {
   const [quality, setQuality] = useState<[string, string] | null>(null);
   const [downloading, setDownloading] = useState<boolean>(false);
   const [loadResolutions, setLoadResolutions] = useState<boolean>(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
   const { mode, setMode } = useColorScheme();
   // const [downloadPath, setDownloadPath] = useState<string>('');
   
@@ -69,6 +72,13 @@ function App() {
         url: url,
         itag: quality[1]
       });
+
+      setShowPopup(true);
+
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 4000);
+
     }
     catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -146,6 +156,15 @@ function App() {
           {downloading ? "Downloading..." : `Download Video in ${quality[0]}`}
         </Button>
       )}
+
+      {showPopup && (<Alert
+        key={'Success'}
+        variant="soft"
+        color='success'
+        sx={{position: 'fixed', bottom: '20px', right:'20px', fontSize: '1.25rem', padding: '16px 32px'}}
+      >
+        Download completed!
+      </Alert>)}
     </div>
 
   );
