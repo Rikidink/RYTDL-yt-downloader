@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/53f92b57-b068-447d-8c06-a5e97ff6bd2d)
+![image](https://github.com/user-attachments/assets/72bfc165-af7a-4ee8-958d-3937000ca3d6)
 
 
 # RYTDL - A YouTube Video Downloader Electron Desktop App
