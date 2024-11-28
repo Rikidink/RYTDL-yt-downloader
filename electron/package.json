@@ -1,6 +1,6 @@
 {
   "name": "RYTDL",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "YT Vid downloader app",
   "main": "main.js",
   "scripts": {
@@ -33,7 +33,9 @@
     "mac": {
       "category": "public.app-category.utilities"
     },
-    "win": {},
+    "win": {
+      "icon": "dist/R.ico"
+    },
     "linux": {},
     "directories": {
       "output": "build",
