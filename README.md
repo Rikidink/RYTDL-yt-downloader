@@ -25,7 +25,8 @@ For sake of categorisation, the electron directory is basically a copy and paste
 I just thought it'd be nice to have every seperate component of the app in different folders :)
 
 ## Usage:
-### **_Videos are downloaded into the system's default "Downloads" folder._**  
+### NOTE: **_Videos are downloaded into the system's default "Downloads" folder._**  
+### NOTE: **_2160p and 1440p videos have AV01 encoding instead of AVC1. These videos require the free AV01 codec extension on the Microsoft Store in order to view._**
 
 It's pretty straightforward, just input the url and press the get resolutions button.
 
