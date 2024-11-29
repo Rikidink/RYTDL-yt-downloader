@@ -103,7 +103,7 @@ On line 8 and 9 where it says `src="/assets/index-Ccy0lpz4.js"` and `href="/asse
 ```
 After that, you can copy and paste the `dist` folder into the Electron folder for it to display the interface. I'm pretty sure there is a way to prevent this without manually modifying it but after trying a couple methods I found online, I gave up.
 
-- _Having the API and frontend both in the Electron app seems weird..._
+- ### _Having the API and frontend both in the Electron app seems weird..._  
 Yes, it's pretty scuffed. If you take a look in the `main.js` file in the Electron app you'll see that the backend is actually run as a seperate node process that is forked from the main Electron node process.
 Optimally, the Electron app would have just been the frontend that made calls to the API that is externally hosted somewhere else but I really didn't want to host it somewhere.
 I could have also had the backend and frontend run in Electron's main and renderer processes but I would have had to redesign the whole backend to use IPC communication instead of HTTP requests.
