@@ -1,4 +1,7 @@
-# YouTube Video Downloader Electron Desktop App
+![image](https://github.com/user-attachments/assets/72bfc165-af7a-4ee8-958d-3937000ca3d6)
+
+
+# RYTDL - A YouTube Video Downloader Electron Desktop App
 
 ![image](https://github.com/user-attachments/assets/27f7549d-3c22-4397-bd54-bbe4c4a7f3ff)
 
@@ -9,7 +12,7 @@
 
 The app was first made as a traditional web app using React and Express communicated through REST Api calls.  
 
-The desktop app is currently just for Windows (I haven't actually tested it on other platforms but electron-packager should have OS-specific options).  
+The desktop app is currently just for Windows (I haven't actually tested it on other platforms but electron-builder is able to also build for Linux and macOS).  
 
 Functionally, the app utilises two main dependencies:
 - [distubejs/ytdl-core](https://github.com/distubejs/ytdl-core) (YouTube downloader node module)
@@ -22,30 +25,29 @@ For sake of categorisation, the electron directory is basically a copy and paste
 I just thought it'd be nice to have every seperate component of the app in different folders :)
 
 ## Usage:
+### **_Videos are downloaded into the system's default "Downloads" folder._**  
+
 It's pretty straightforward, just input the url and press the get resolutions button.
 
 From there, you can see the available resolutions for the video (the app supports all resolutions up to and including 4k/2160p!).
 
-Press download and the video download location depends on if you're using the web app or desktop app:
+Select a resolution and press download!
 
-#### Desktop app:
-Downloaded into the `resources/app/` folder (look for the `.mp4` file with the video title).
-
-#### Web app:
-Downloaded into the backend folder.
-
-**NOTE:** It might take a little while for longer videos at resolutions greater than 1080p, this is because merging audio + video just takes a long time :(
 
 ![image](https://github.com/user-attachments/assets/1b3eced1-23ab-4ed1-9fbf-0d290d6ed9f8)
 
 
 ## Build/Run:
 
-### Desktop app (packaged zip file)
-1. Download the zipped app file in the releases.
+### Desktop app (.exe installer)
+1. Download the setup.exe file in the latest release.
+2. Run it and it will download the app as a program onto the system.
+3. Run the app on your computer.
+
+### Desktop app (unpacked zip file)
+1. Download the zipped "win-unpacked.rar" file in the latest release.
 2. Extract it and go into the app folder.
 3. Run `RYTDL.exe`  
-(The zipped app includes ffmpeg so no need to download it)
 
 ### Traditional Web App:
 1. Install node modules for frontend and backend:
@@ -76,8 +78,8 @@ cd electron
 npm install
 ```
 2. Install [ffmpeg](https://www.ffmpeg.org/) and place ffmpeg.exe into a ffmpeg folder in the electron folder.
-3. Run the Electron app using `npx electron .` OR package it into an executable app with `npx electron-packager .`
-4. The interface should pop up in a desktop window if just running it using `npx electron .`, otherwise, a folder containing the `.exe` for the app will be created if packaged.
+3. Run the Electron app using `npx electron .` OR package it into an executable app with `npx electron-builder --win`
+4. The interface should pop up in a desktop window if just running it using `npx electron .`, otherwise, a "build" folder containing the packaged files will appear.
 
 ## Implementation Notes/Details:
 - The static build of the frontend is included in the electron folder (but not in the frontend folder). If you want to build the frontend yourself using `npm run build` you'll have to modify the `index.html` for it to work with Electron.
@@ -99,11 +101,6 @@ On line 8 and 9 where it says `src="/assets/index-Ccy0lpz4.js"` and `href="/asse
 </html>
 ```
 After that, you can copy and paste the `dist` folder into the Electron folder for it to display the interface. I'm pretty sure there is a way to prevent this without manually modifying it but after trying a couple methods I found online, I gave up.
-
-- _Why does the downloaded video get downloaded to `resources/app/` in the desktop app and not somewhere more convenient?_  
-It should be possible for user custom download path if the user inputs the full path to the folder in the interface which is then given to the backend but I wanted to do it through a dialog window by using
-[window.showDirectoryPicker()](https://developer.mozilla.org/en-US/docs/Web/API/Window/showDirectoryPicker)
-but I believe its impossible because of security issues. I probably will implement the manual download path though.
 
 - _Having the API and frontend both in the Electron app seems weird..._
 Yes, it's pretty scuffed. If you take a look in the `main.js` file in the Electron app you'll see that the backend is actually run as a seperate node process that is forked from the main Electron node process.
