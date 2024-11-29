@@ -39,9 +39,16 @@ app.get('/api/resolutions', async (req, res) => {
 
         const resolutions = new Map(
             info.formats
-            .filter(format => format.hasVideo)
-            // .map(format => [format.qualityLabel, format.qualityLabel])
-            .map(format => [format.qualityLabel, format.itag])
+                .filter(format => {
+                    // Check if the format has video and matches codec requirements
+                    return format.hasVideo && (
+                        // For resolutions 2160p and 1440p, only allow AV1
+                        (["2160p", "1440p"].includes(format.qualityLabel) && format.codecs.startsWith("av01")) ||
+                        // For other resolutions, only allow AVC1
+                        (!["2160p", "1440p"].includes(format.qualityLabel) && format.codecs.startsWith("avc1"))
+                    );
+                })
+                .map(format => [format.qualityLabel, format.itag]) // Map to resolution and itag
         );
 
         console.log(resolutions);
