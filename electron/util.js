@@ -3,10 +3,9 @@ const ytdl = require("@distube/ytdl-core");
 const path = require('path');
 const fs = require('fs');
 
-// set paths for ffmpeg/ffprobe
+// set path for ffmpeg (first one is production, second is for local npx electron . )
 ffmpeg.setFfmpegPath(path.join(process.resourcesPath, "ffmpeg/ffmpeg.exe"));
-// ffmpeg.setFfprobePath(path.join(__dirname, "ffmpeg/ffprobe.exe"));
-
+// ffmpeg.setFfmpegPath(path.join(__dirname, "ffmpeg/ffmpeg.exe"));
 
 // this downloads to browser but is a fragmented mp4...
 // Combine video and audio using ffmpeg
