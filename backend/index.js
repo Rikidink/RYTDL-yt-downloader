@@ -106,9 +106,33 @@ app.post('/api/download', async (req, res) => {
     finally {
         cleanUp();
     }
-
-
 });
 
 
+app.post('/api/downloadAudio', async (req, res) => {
+    const url = req.body.url;
 
+    if (!url) {
+        return res.status(400).json({error: "Invalid URL"});
+    }
+
+    try {
+        const info = await ytdl.getInfo(url);
+        const videoTitle = info.videoDetails.title.replace(/[<>:"/\\|?*]/g, ' ');
+        console.log(videoTitle);
+
+        const audioFormat = ytdl.chooseFormat(info.formats, { quality: '140' });
+
+        const downloadsFolder = path.join(os.homedir(), 'Downloads');
+        const outputFileName = path.join(downloadsFolder, `${videoTitle}.mp3`)
+
+        console.log("Outputting to: ", outputFileName);
+        await downloadYtVideo(url, audioFormat, outputFileName)
+
+        return res.status(200).json({ message: "Sucessfully downloaded!" });
+        
+    }
+    catch (err) {
+        return res.status(500).json({error: `Error processing request ${err}`});
+    }
+})

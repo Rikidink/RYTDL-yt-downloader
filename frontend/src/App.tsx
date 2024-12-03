@@ -18,11 +18,11 @@ function App() {
   const [url, setUrl] = useState<string>('');
   const [resolutions, setResolutions] = useState<Resolutions>({});
   const [quality, setQuality] = useState<[string, string] | null>(null);
-  const [downloading, setDownloading] = useState<boolean>(false);
+  const [downloadingVid, setDownloadingVid] = useState<boolean>(false);
+  const [downloadingAud, setDownloadingAud] = useState<boolean>(false);
   const [loadResolutions, setLoadResolutions] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const { mode, setMode } = useColorScheme();
-  // const [downloadPath, setDownloadPath] = useState<string>('');
   
   useEffect(() => {
     // Reset resolutions and quality when URL changes
@@ -65,7 +65,7 @@ function App() {
         return
       }
 
-      setDownloading(true);
+      setDownloadingVid(true);
 
       await axios.post('/api/download', {
       // await axios.post('http://localhost:8080/api/download', {  // this is so electron does the requests properly
@@ -89,24 +89,36 @@ function App() {
       }
     }
     finally {
-      setDownloading(false);
+      setDownloadingVid(false);
     }
   };
 
-  // const selectDownloadFolder = async () => {
-  //   try {
-  //     // Open a folder picker dialog
-  //     const directoryHandle = await window.showDirectoryPicker(); // it does exist
-  //     const folderName = directoryHandle.name;
+  const handleDownloadAudio = async () => {
+    try {
+      setDownloadingAud(true);
 
-  //     // Get full path for backend (Electron apps only)
-  //     const path = folderName; // This assumes Electron integration
-  //     setDownloadPath(path);
-  //   } catch (err) {
-  //     console.error('Error selecting folder:', err);
-  //   }
-  // };
+      await axios.post('/api/downloadAudio', {
+        url: url,
+      });
 
+      setShowPopup(true)
+
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 4000);
+    }
+    catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        console.error('Error downloading:', err.message);
+      }
+      else {
+        console.error('Unexpected error:', err);
+      }
+    }
+    finally {
+      setDownloadingAud(false);
+    }
+  }
 
   return (
     <div>
@@ -125,12 +137,31 @@ function App() {
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="Enter video URL"
-        disabled={downloading}
+        disabled={downloadingVid || downloadingAud}
         sx={{ marginBottom: 2, width: '100%' }} // Space below input
       />
-      <Button onClick={fetchResolutions} size='lg' loading={loadResolutions} disabled={downloading} sx={{ marginBottom: 2 }}>
-        Get Resolutions
-      </Button>
+
+      <ButtonGroup
+        size="lg"
+        variant="solid"
+        color='primary'
+        spacing={2} // Space between buttons
+        sx={{
+          marginBottom: 2,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+
+        <Button onClick={fetchResolutions} loading={loadResolutions} disabled={downloadingVid || downloadingAud}>
+          Download with video
+        </Button>
+
+        <Button onClick={handleDownloadAudio} loading={downloadingAud} loadingPosition='end' disabled={downloadingVid || downloadingAud || loadResolutions}>
+          {downloadingAud ? "Downloading..." : "Download only Audio"}
+        </Button>
+
+      </ButtonGroup>
 
       {Object.keys(resolutions).length > 0 && (<h2>Available Resolutions:</h2>)}
       
@@ -138,6 +169,7 @@ function App() {
         size="lg"
         variant="solid"
         spacing={2} // Space between buttons
+        disabled={downloadingVid || downloadingAud}
         sx={{
           marginBottom: 2,
           display: 'flex',
@@ -152,8 +184,8 @@ function App() {
       </ButtonGroup>
 
       {quality && (
-        <Button onClick={handleDownload} size='lg' variant='solid' color='success' loading={downloading} loadingPosition='end' sx={{ marginTop: 2 }}>
-          {downloading ? "Downloading..." : `Download Video in ${quality[0]}`}
+        <Button onClick={handleDownload} size='lg' variant='solid' color='success' loading={downloadingVid} disabled={downloadingAud} loadingPosition='end' sx={{ marginTop: 2 }}>
+          {downloadingVid ? "Downloading..." : `Download Video in ${quality[0]}`}
         </Button>
       )}
 
