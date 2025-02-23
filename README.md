@@ -70,8 +70,6 @@ npm run dev
 ```
 4. Go to `localhost:5173` in a browser and you should see the interface.
 
----
-
 ### Desktop app (Electron)
 1. Install node modules for the electron app:
 ```bash
